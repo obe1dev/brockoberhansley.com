@@ -1,0 +1,224 @@
+ <!doctype html>
+ <head>
+ 
+
+ <meta charset="utf-8" >
+ <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="shortcut icon" href="brockIcon.ico">
+
+
+
+ <script type="text/javascript" src="jquery.min.js"></script>
+
+<title>Code Runner</title>
+
+ <style type="text/css">
+ 
+	body {
+		margin:0;
+		padding:0;
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+		font-weight: 300;
+	}
+	
+	#menuBar {
+		width:100%;
+		height:40px;
+		background-color:#e0e0e0;
+		border-bottom:1px solid grey;
+	}
+	
+	#logo {
+		padding: 10px 0 0 20px;
+		font-weight:bold;
+		font-size:120%;
+		float:left;
+	}
+	
+	#buttonDiv {
+		float:right;
+		padding:5px 10px 0 0;
+	}
+	
+	#runButton {
+		font-size:120%;
+	}
+	
+	#toggles {
+		width:199.5px;
+		margin:0 auto;
+		list-style:none;
+		border:1px solid grey;
+		border-radius:3px;
+		height:27px;
+		padding:0;
+		position:relative;
+		top:5px;
+	}
+	
+	#toggles li {
+		float:left;
+		border-right:1px solid grey;
+		padding:5px 7px;
+	}
+	
+	.clear {
+		clear:both;
+	}
+	
+	.codeContainer {
+		height:100%;
+		width:50%;
+		float:left;
+		position:relative;
+	}
+	
+	.codeContainer textarea {
+		width:100%;
+		height:100%;
+		border:none;
+		border-right:1px solid grey;
+		box-sizing:border-box;
+		font-family:monotype;
+		font-size:90%;
+		padding:5px;
+	}
+	
+	.codeLabel {
+		position:absolute;
+		right:10px;
+		top:10px;
+		z-index:1;
+		font-weight:bold;
+	}
+	
+	#CSSContainer, #JSContainer {
+		display:none;
+	}
+	
+	iframe {
+		height:100%;
+		width:100%;
+		position:relative;
+		left:1px;
+		border:none;
+	}
+	
+	.selected{
+		background-color:grey;
+	}
+
+ </style>
+
+ </head>
+
+ <body>
+
+	<div id="wrapper">
+	
+		<div id="menuBar">
+		
+			<div id="logo">
+			
+				Brock's Code Runner
+			
+			</div>
+			
+			<div id="buttonDiv">
+			
+				<button id="runButton">Run</button>
+				
+			</div>
+			
+			<ul id="toggles">
+			
+				<li class="toggle selected">HTML</li>
+				<li class="toggle">CSS</li>
+				<li class="toggle">JS</li>
+				<li class="toggle selected" style="border:none">Result</li>
+			
+			</ul>
+			
+		</div>
+		
+	</div>
+	
+	<div class="clear"></div>
+
+	<div class="codeContainer" id="HTMLContainer">
+	
+		<div class="codeLabel">HTML</div>
+	
+		<textarea id="htmlCode"></textarea>
+	
+	</div>
+	
+	<div class="codeContainer" id="CSSContainer">
+	
+		<div class="codeLabel">CSS</div>
+	
+		<textarea id="cssCode"></textarea>
+	
+	</div>
+	
+	<div class="codeContainer" id="JSContainer">
+	
+		<div class="codeLabel">JS</div>
+	
+		<textarea id="jsCode"></textarea>
+	
+	</div>
+	
+	<div class="codeContainer" id="ResultContainer">
+	
+		<div class="codeLabel">Result</div>
+	
+		<iframe id="resultFrame"></iframe>
+	
+	</div>
+	
+
+ <script type="text/javascript">
+	
+	var windowHeight=$(window).height();
+	var menuBarHeight=$("menuBar").height();
+	
+	var codeContainerHeight=windowHeight-menuBarHeight;
+	
+	$(".codeContainer").height(codeContainerHeight+"px");
+	
+	$(".toggle").click(function(){
+	
+		$(this).toggleClass("selected");
+		
+		var activeDiv=$(this).html();
+		
+		$("#"+activeDiv+"Container").toggle();
+		
+		var showingDivs=$(".codeContainer").filter(function() {
+		
+			return($(this).css("display")!="none");
+		
+		}).length;
+		
+		var width=100/showingDivs;
+		
+		$(".codeContainer").width(width+"%");
+	
+	});
+	
+	$("#runButton").click(function() {
+	
+		$("iframe").contents().find("html").html('<style>'+$("#cssCode").val()+'</style>'+$("#htmlCode").val());
+		
+		document.getElementById("resultFrame").contentWindow.eval($("#jsCode").val());
+		
+	});
+
+ </script>
+
+	
+
+
+ </body>
